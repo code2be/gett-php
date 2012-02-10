@@ -27,6 +27,13 @@ class Requests {
 	const POST = 'POST';
 
 	/**
+	 * PUT method
+	 *
+	 * @var string
+	 */
+	const PUT = 'PUT';
+
+	/**
 	 * GET method
 	 *
 	 * @var string
@@ -41,11 +48,26 @@ class Requests {
 	const HEAD = 'HEAD';
 
 	/**
+	 * DELETE method
+	 *
+	 * @var string
+	 */
+	const DELETE = 'DELETE';
+
+	/**
+	 * PATCH method
+	 *
+	 * @link http://tools.ietf.org/html/rfc5789
+	 * @var string
+	 */
+	const PATCH = 'PATCH';
+
+	/**
 	 * Current version of Requests
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.5';
+	const VERSION = '1.6-dev';
 
 	/**
 	 * Registered transport classes
@@ -178,11 +200,16 @@ class Requests {
 	public static function head($url, $headers = array(), $options = array()) {
 		return self::request($url, $headers, null, self::HEAD, $options);
 	}
-	/**#@-*/
 
 	/**
-	 * Send a POST request
-	 *
+	 * Send a DELETE request
+	 */
+	public static function delete($url, $headers = array(), $options = array()) {
+		return self::request($url, $headers, null, self::DELETE, $options);
+	}
+	/**#@-*/
+
+	/**#@+
 	 * @see request()
 	 * @param string $url
 	 * @param array $headers
@@ -190,9 +217,31 @@ class Requests {
 	 * @param array $options
 	 * @return Requests_Response
 	 */
+	/**
+	 * Send a POST request
+	 */
 	public static function post($url, $headers = array(), $data = array(), $options = array()) {
 		return self::request($url, $headers, $data, self::POST, $options);
 	}
+	/**
+	 * Send a PUT request
+	 */
+	public static function put($url, $headers = array(), $data = array(), $options = array()) {
+		return self::request($url, $headers, $data, self::PUT, $options);
+	}
+
+	/**
+	 * Send a PATCH request
+	 *
+	 * Note: Unlike {@see post} and {@see put}, `$headers` is required, as the
+	 * specification recommends that should send an ETag
+	 *
+	 * @link http://tools.ietf.org/html/rfc5789
+	 */
+	public static function patch($url, $headers, $data = array(), $options = array()) {
+		return self::request($url, $headers, $data, self::PATCH, $options);
+	}
+	/**#@-*/
 
 	/**
 	 * Main interface for HTTP requests
@@ -311,6 +360,7 @@ class Requests {
 			return $return;
 		}
 
+		$return->raw = $headers;
 		$return->url = $url;
 
 		if (!$options['filename']) {
@@ -361,6 +411,9 @@ class Requests {
 
 		if ((in_array($return->status_code, array(300, 301, 302, 303, 307)) || $return->status_code > 307 && $return->status_code < 400) && $options['follow_redirects'] === true) {
 			if (isset($return->headers['location']) && $options['redirected'] < $options['redirects']) {
+				if ($return->status_code === 303) {
+					$options['type'] = Requests::GET;
+				}
 				$options['redirected']++;
 				$location = $return->headers['location'];
 				$redirected = self::request($location, $req_headers, $req_data, false, $options);

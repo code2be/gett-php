@@ -8,16 +8,11 @@ require_once('gett.class.php');
 
 /*
  * APIKey is required
+ * Authenticate using your own e-mail and password (Must be registered on ge.tt).
  * 
  * @see http://ge.tt/developers
  */
-$gett = new gett('API');
-
-/**
- * Authenticate using your own e-mail and password (Must be registered on ge.tt).
- */
-$gett->auth('e-mail', 'password');
-
+$gett = new gett('APIKey', 'e-mail', 'password');
 
 /*
  * We'd send requests by calling `request` method.
@@ -30,13 +25,15 @@ $gett->auth('e-mail', 'password');
 
 /*
  * Get list of files you own.
+ *
+ * You could do $gett->getShare('mytitle'); to get only a specific share
  */
-$my_shares = $gett->request('shares');
+$my_shares = $gett->getShare();
 var_dump($my_shares);
 
 /*
- * Creating new share titled 'New Share'.
- * Method `request` here would send POST Request as there're some parameters passed in the second argument.
+ * See here what you can do with the request method https://open.ge.tt/1/doc/rest
  */
-$new_share = $gett->request('shares/create', Array('title'=>'New Share !'));
-var_dump($new_share);
+//$new_share = $gett->request('shares/create', array('title' => 'New Share!'));
+$new_share = $gett->newShare('New Share!'); // both methods are the same
+var_dump($new_share); 

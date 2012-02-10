@@ -11,8 +11,8 @@ error_reporting(E_ALL);
  * @author		Ahmed Hosny <admin@spanlayer.com>, Jacob Groß / kurtextrem <kurtextrem@gmail.com>
  * 
  * @license		This library is Free for everyone to use or modify,
- * 			Keeping the original credits,
- * 			Appending notes and credits for any modifications.
+ * 				Keeping the original credits,
+ * 				Appending notes and credits for any modifications.
  */
 class gett {
 
@@ -35,12 +35,13 @@ class gett {
 	 *
 	 * @param	string		$APIKey
 	 */
-	public function __construct($APIKey) {
+	public function __construct($APIKey, $email, $password) {
 		session_start();
 		require_once 'library/Requests.php';
 		Requests::register_autoloader();
 
 		$this->APIKey = $APIKey;
+		$this->auth($email, $password);
 	}
 
 	/**
@@ -51,14 +52,14 @@ class gett {
 	 * @return	mixed
 	 * @throws	Exception
 	 */
-	public function request($method, $postData) {
+	public function request($method, $postData = array()) {
 		$post_data_str = json_encode($postData);
 		$this->accessToken = $this->accessToken ? $this->accessToken : (isset($_SESSION['gett_accessToken']) ? $_SESSION['gett_accessToken'] : false);
 
 		$accessToken = $this->accessToken ? '?accesstoken=' . $this->accessToken : '';
 		try {
 			if (is_array($postData) && count($postData) > 0) {
-				$request = Requests::post('https://open.ge.tt/1/' . $method . $accessToken, array(), $post_data_str);
+				$request = Requests::post('https://open.ge.tt/1/' . $method . $accessToken, array('Content-Type' => 'application/json'), $post_data_str);
 			} else {
 				$request = Requests::get('https://open.ge.tt/1/' . $method . $accessToken);
 			}
@@ -66,18 +67,61 @@ class gett {
 			$this->handleException($e);
 		}
 
-		$result = json_decode($request->body);
+		$response = json_decode($request->body);
 
 		try {
-			if (isset($result->error))
+			if (isset($response->error) || !$request->success)
 				throw new Exception('<i>Error:</i> <strong>' . $result->error . '</strong>', E_USER_ERROR);
-			elseif (is_null($result))
+			if (is_null($result))
 				throw new Exception('<strong>Unknown method <i>(' . $method . ')</i> or <span style="color: white; background-color: lightblue">GE.TT</span> API is down!</strong>', E_USER_ERROR);
 		} catch (Exception $e) {
 			$this->handleException($e);
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Creates a new share
+	 *
+	 * @param	string		$title
+	 * @return	mixed
+	 */
+	public function newShare($title) {
+		return $this->request('shares/create', array('title' => $title));
+	}
+
+	/**
+	 * Returns data from a share
+	 *
+	 * @param	string		$title
+	 * @return	mixed
+	 */
+	public function getShare($title = '') {
+		if (!empty($title))
+			$title = '/' . $title;
+
+		return $this->request('shares' . $title);
+	}
+
+	/**
+	 * Renames a share
+	 *
+	 * @param	string		$title
+	 * @return	mixed
+	 */
+	public function renameShare($oldTitle, $newTitle) {
+		return $this->request('shares/' . $oldTitle . '/update', array('title' => $newTitle));
+	}
+
+	/**
+	 * Deletes a share
+	 *
+	 * @param	string		$title
+	 * @return	mixed
+	 */
+	public function deleteShare($title) {
+		return $this->request('shares/' . $title . '/destroy'); // alternative would be https://open.ge.tt/1/doc/rest#shares/{sharename}/update
 	}
 
 	/**
@@ -88,10 +132,10 @@ class gett {
 	 * @return	bool
 	 * @throws	Exception
 	 */
-	public function auth($email, $password) {
+	private function auth($email, $password) {
 		try {
 			if (isset($_SESSION['gett_accessToken']) || !empty($this->accessToken))
-				return false;
+				return true;
 			// throw new Exception($email . ' is already authed.'); // There's no problem if user is already authed
 		} catch (Exception $e) {
 			$this->handleException($e);
@@ -106,7 +150,7 @@ class gett {
 
 		$_SESSION['gett_accessToken'] = $user->accesstoken;
 		$this->accessToken = $user->accesstoken;
-
+		
 		return true;
 	}
 
