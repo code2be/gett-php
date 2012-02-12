@@ -87,7 +87,7 @@ class gett {
 	 * @param	string		$title
 	 * @return	mixed
 	 */
-	public function newShare($title) {
+	public function new_share($title) {
 		return $this->request('shares/create', array('title' => $title));
 	}
 
@@ -97,7 +97,7 @@ class gett {
 	 * @param	string		$title
 	 * @return	mixed
 	 */
-	public function getShare($title = '') {
+	public function get_share($title = '') {
 		if (!empty($title))
 			$title = '/' . $title;
 
@@ -110,7 +110,7 @@ class gett {
 	 * @param	string		$title
 	 * @return	mixed
 	 */
-	public function renameShare($oldTitle, $newTitle) {
+	public function rename_share($oldTitle, $newTitle) {
 		return $this->request('shares/' . $oldTitle . '/update', array('title' => $newTitle));
 	}
 
@@ -120,7 +120,7 @@ class gett {
 	 * @param	string		$title
 	 * @return	mixed
 	 */
-	public function deleteShare($title) {
+	public function delete_share($title) {
 		return $this->request('shares/' . $title . '/destroy'); // alternative would be https://open.ge.tt/1/doc/rest#shares/{sharename}/update
 	}
 
