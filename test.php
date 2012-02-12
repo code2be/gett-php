@@ -2,7 +2,7 @@
 /**
  * Example file showing how we can use the library.
  * 
- * Any questions? https://github.com/kurtextrem/gett-php/issues
+ * Any questions? https://github.com/AhmedHosny/gett-php/issues
  */
 require_once('gett.class.php');
 
@@ -19,7 +19,7 @@ $gett = new gett('APIKey', 'e-mail', 'password');
  *
  *  First Argument: 	(required) Method name to execute,
  * 					For list of available methods, refer to: http://ge.tt/developers
- * Second Argument: (optional) Holds any parameters to be sent with the request.
+ *  Second Argument:	(optional) Holds any parameters to be sent with the request.
  * 					Passing parameters convert the request type to POST.
  */
 
