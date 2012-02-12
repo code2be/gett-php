@@ -15,15 +15,6 @@ require_once('gett.class.php');
 $gett = new gett('APIKey', 'e-mail', 'password');
 
 /*
- * We'd send requests by calling `request` method.
- *
- *  First Argument: 	(required) Method name to execute,
- * 					For list of available methods, refer to: http://ge.tt/developers
- *  Second Argument:	(optional) Holds any parameters to be sent with the request.
- * 					Passing parameters convert the request type to POST.
- */
-
-/*
  * Get list of files you own.
  *
  * You could do $gett->get_share('mytitle'); to get only a specific share
