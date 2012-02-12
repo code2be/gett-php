@@ -26,14 +26,15 @@ $gett = new gett('APIKey', 'e-mail', 'password');
 /*
  * Get list of files you own.
  *
- * You could do $gett->getShare('mytitle'); to get only a specific share
+ * You could do $gett->get_share('mytitle'); to get only a specific share
  */
-$my_shares = $gett->getShare();
+$my_shares = $gett->get_share();
 var_dump($my_shares);
 
 /*
- * See here what you can do with the request method https://open.ge.tt/1/doc/rest
+ * Here you can create new share titled "New Share !"
  */
-//$new_share = $gett->request('shares/create', array('title' => 'New Share!'));
-$new_share = $gett->newShare('New Share!'); // both methods are the same
+$new_share = $gett->new_share('New Share!'); // both methods are the same
 var_dump($new_share);
+
+?>
