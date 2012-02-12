@@ -37,7 +37,7 @@ class gett {
 	 */
 	public function __construct($APIKey, $email, $password) {
 		session_start();
-		require_once 'library/Requests.php';
+		require_once 'libraries/Requests.php';
 		Requests::register_autoloader();
 
 		$this->APIKey = $APIKey;
