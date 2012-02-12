@@ -148,8 +148,15 @@ class gett {
 		    'password' => $password
 			));
 
-		$_SESSION['gett_accessToken'] = $user->accesstoken;
-		$this->accessToken = $user->accesstoken;
+		try {
+			if(!isset($user->accesstoken))
+				throw new Exception('Authentication failed !', E_USER_ERROR);
+				
+			$_SESSION['gett_accessToken'] = $user->accesstoken;
+			$this->accessToken = $user->accesstoken;
+		} catch (Exception $e) {
+			$this->handleException($e);
+		}
 		
 		return true;
 	}
