@@ -35,5 +35,5 @@ var_dump($my_shares);
  * See here what you can do with the request method https://open.ge.tt/1/doc/rest
  */
 //$new_share = $gett->request('shares/create', array('title' => 'New Share!'));
-//$new_share = $gett->newShare('New Share!'); // both methods are the same
-//var_dump($new_share);
+$new_share = $gett->newShare('New Share!'); // both methods are the same
+var_dump($new_share);

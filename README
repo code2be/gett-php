@@ -5,7 +5,7 @@ It's early version, which handles the following:
 * Sending & Processing results of Requests.
 * Most of errors that happen while Authenticating or Requests.
 
-Contributions are welcome! - For an API with cURL see https://github.com/AhmedHosny/gett-php
+Contributions are welcome!
 
 
 See test.php how it works.
