@@ -59,7 +59,7 @@ class gett {
 		$accessToken = $this->accessToken ? '?accesstoken=' . $this->accessToken : '';
 		try {
 			if (is_array($postData) && count($postData) > 0) {
-				$request = Requests::post('https://open.ge.tt/1/' . $method . $accessToken, array('Content-Type' => 'application/json'), $post_data_str);
+				$request = Requests::post('https://open.ge.tt/1/' . $method . $accessToken, array(), $post_data_str);
 			} else {
 				$request = Requests::get('https://open.ge.tt/1/' . $method . $accessToken);
 			}
@@ -71,14 +71,14 @@ class gett {
 
 		try {
 			if (isset($response->error) || !$request->success)
-				throw new Exception('<i>Error:</i> <strong>' . $result->error . '</strong>', E_USER_ERROR);
-			if (is_null($result))
+				throw new Exception('<i>Error:</i> <strong>' . $response->error . '</strong>', E_USER_ERROR);
+			if (is_null($response))
 				throw new Exception('<strong>Unknown method <i>(' . $method . ')</i> or <span style="color: white; background-color: lightblue">GE.TT</span> API is down!</strong>', E_USER_ERROR);
 		} catch (Exception $e) {
 			$this->handleException($e);
 		}
 
-		return $result;
+		return $response;
 	}
 
 	/**
